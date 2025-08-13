@@ -1,45 +1,38 @@
-import java.util.*;
-
 class RandomizedSet {
-     private Set<Integer> set ;
-     private Random random;
+    private List<Integer> list ;
+    private Map<Integer,Integer> ind;
+    private Random random;
+
 
     public RandomizedSet() {
-       set = new HashSet<>();
-       random = new Random();
+        list = new ArrayList<>();
+        ind = new HashMap<>();
+        random = new Random();
     }
     
     public boolean insert(int val) {
-        if(set.contains(val)){
-            return false;
-        }
-         set.add(val);
-         return true;
+        if(ind.containsKey(val)) return false;
+        ind.put(val,list.size());
+        list.add(val);
+        return true;
     }
     
     public boolean remove(int val) {
-         if(!set.contains(val)){
-            return false;
-        }
-            set.remove(val);
-            return true;
-        
-        
+         Integer i = ind.get(val);
+         if (i == null) return false;
+         int lastint = list.size()-1;
+         int lastvalue = list.get(lastint);
+
+         list.set(i,lastvalue);
+         ind.put(lastvalue,i);
+
+         list.remove(lastint);
+         ind.remove(val);
+         return true;
     }
     
     public int getRandom() {
-       if(set.isEmpty()){
-         throw new NoSuchElementException("Set is empty");
-       }
-       int index = random.nextInt(set.size());
-       int i=0;
-       for(int j : set){
-        if(i==index){
-            return j;
-        }
-        i++;
-       } 
-        throw new RuntimeException("Unexpected error");
+        return list.get(random.nextInt(list.size()));
     }
 }
 
